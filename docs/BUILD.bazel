@@ -1,0 +1,18 @@
+# This load statement must be in the docs/ package rather than anything users depend on
+# so that the dependency on stardoc doesn't leak to them.
+load("@aspect_bazel_lib//lib:docs.bzl", "stardoc_with_diff_test", "update_docs")
+
+stardoc_with_diff_test(
+    name = "rules",
+    bzl_library_target = "//workflows:defs",
+    # Failure on Bazel 6.5.0 with bzlmod enabled with unknown root cause not worth investigating:
+    # "Stardoc documentation generation failed: File /home/runner/.cache/bazel/_bazel_runner/0330dec67b23bab47dfc789374a34fae/sandbox/linux-sandbox/27/execroot/_main/bazel-out/k8-opt-exec-2B5CBBC6/bin/docs/rules_stardoc.runfiles/_main/workflows/private/circleci.bzl imported '@aspect_bazel_lib//lib:write_source_files.bzl', yet /home/runner/.cache/bazel/_bazel_runner/0330dec67b23bab47dfc789374a34fae/sandbox/linux-sandbox/27/execroot/_main/bazel-out/k8-opt-exec-2B5CBBC6/bin/docs/rules_stardoc.runfiles/aspect_bazel_lib/lib/write_source_files.bzl was not found."
+    tags = ["skip-on-bazel6"],
+)
+
+update_docs(
+    name = "update",
+    # Failure on Bazel 6.5.0 with bzlmod enabled with unknown root cause not worth investigating:
+    # "Stardoc documentation generation failed: File /home/runner/.cache/bazel/_bazel_runner/0330dec67b23bab47dfc789374a34fae/sandbox/linux-sandbox/27/execroot/_main/bazel-out/k8-opt-exec-2B5CBBC6/bin/docs/rules_stardoc.runfiles/_main/workflows/private/circleci.bzl imported '@aspect_bazel_lib//lib:write_source_files.bzl', yet /home/runner/.cache/bazel/_bazel_runner/0330dec67b23bab47dfc789374a34fae/sandbox/linux-sandbox/27/execroot/_main/bazel-out/k8-opt-exec-2B5CBBC6/bin/docs/rules_stardoc.runfiles/aspect_bazel_lib/lib/write_source_files.bzl was not found."
+    tags = ["skip-on-bazel6"],
+)

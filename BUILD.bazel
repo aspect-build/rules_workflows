@@ -1,0 +1,14 @@
+alias(
+    name = "buildifier",
+    actual = "//tools/buildifier",
+)
+
+alias(
+    name = "format",
+    actual = "//tools/format",
+)
+
+alias(
+    name = "gazelle",
+    actual = "//tools/gazelle",
+)

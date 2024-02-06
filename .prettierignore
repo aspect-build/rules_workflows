@@ -1,0 +1,7 @@
+docs/*.md
+e2e/smoke/.circleci/aspect-workflows-config.yml
+e2e/smoke/.circleci/config.yml
+examples/circleci/merged_stamped_config/aspect-workflows-config.yml
+examples/circleci/merged_stamped_config/config.yml
+examples/circleci/merged_unstamped_config/config.yml
+examples/circleci/standalone_config/config.yml

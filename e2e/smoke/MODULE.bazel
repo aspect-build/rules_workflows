@@ -1,0 +1,5 @@
+bazel_dep(name = "aspect_rules_workflows", version = "0.0.0", dev_dependency = True)
+local_path_override(
+    module_name = "aspect_rules_workflows",
+    path = "../..",
+)

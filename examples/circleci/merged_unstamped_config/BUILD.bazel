@@ -1,0 +1,15 @@
+load("@aspect_rules_workflows//workflows:defs.bzl", "circleci_aspect_workflows_config", "circleci_merged_config")
+
+circleci_aspect_workflows_config(
+    name = "aspect-workflows-config",
+    circleci_org = "aspect-build",
+)
+
+circleci_merged_config(
+    name = "config",
+    circleci_config_files = [
+        ":user-config-a.yml",
+        ":user-config-b.yml",
+        ":aspect-workflows-config",
+    ],
+)

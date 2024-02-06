@@ -1,0 +1,6 @@
+load("@aspect_rules_workflows//workflows:defs.bzl", "circleci_aspect_workflows_config")
+
+circleci_aspect_workflows_config(
+    name = "config",
+    circleci_org = "aspect-build",
+)

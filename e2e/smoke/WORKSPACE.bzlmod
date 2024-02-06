@@ -1,0 +1,9 @@
+# When --enable_bzlmod is set, this file replaces WORKSPACE.bazel.
+
+#---SNIP--- Below here is re-used in the workspace snippet published on releases
+#########################
+# rules_workflows setup #
+#########################
+load("@aspect_rules_workflows//workflows:repositories.bzl", "LATEST_WORKFLOWS_VERSION", "fetch_workflows_tools")
+
+fetch_workflows_tools(workflows_version = LATEST_WORKFLOWS_VERSION)

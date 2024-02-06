@@ -1,0 +1,13 @@
+{
+  "homepage": "https://docs.aspect.build/rules/aspect_rules_workflows",
+  "maintainers": [
+    {
+      "email": "greg@aspect.dev",
+      "github": "gregmagolan",
+      "name": "Greg Magolan"
+    }
+  ],
+  "repository": ["github:aspect-build/rules_workflows"],
+  "versions": [],
+  "yanked_versions": {}
+}

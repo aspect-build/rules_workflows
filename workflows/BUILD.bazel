@@ -1,0 +1,56 @@
+load("@aspect_bazel_lib//lib:utils.bzl", "is_bazel_6_or_greater")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+# For stardoc to reference the files
+exports_files(["defs.bzl"])
+
+alias(
+    name = "rosetta",
+    actual = select({
+        "@bazel_tools//src/conditions:darwin_arm64": "{}rosetta_darwin_aarch64//file:rosetta".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:darwin_x86_64": "{}rosetta_darwin_x86_64//file:rosetta".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:linux_aarch64": "{}rosetta_linux_aarch64//file:rosetta".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:linux_x86_64": "{}rosetta_linux_x86_64//file:rosetta".format("@@" if is_bazel_6_or_greater() else "@"),
+    }),
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "circleci-config-merge",
+    actual = select({
+        "@bazel_tools//src/conditions:darwin_arm64": "{}circleci_config_merge_darwin_aarch64//:circleci-config-merge".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:darwin_x86_64": "{}circleci_config_merge_darwin_x86_64//:circleci-config-merge".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:linux_aarch64": "{}circleci_config_merge_linux_aarch64//:circleci-config-merge".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:linux_x86_64": "{}circleci_config_merge_linux_x86_64//:circleci-config-merge".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:windows_arm64": "{}circleci_config_merge_linux_aarch64//:circleci-config-merge.exe".format("@@" if is_bazel_6_or_greater() else "@"),
+        "@bazel_tools//src/conditions:windows_x64": "{}circleci_config_merge_linux_x86_64//:circleci-config-merge.exe".format("@@" if is_bazel_6_or_greater() else "@"),
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "defs",
+    srcs = ["defs.bzl"],
+    visibility = ["//visibility:public"],
+    deps = ["@aspect_rules_workflows//workflows/private:circleci"],
+)
+
+bzl_library(
+    name = "dependencies",
+    srcs = ["dependencies.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//workflows/private:maybe",
+        "//workflows/private:versions",
+    ],
+)
+
+bzl_library(
+    name = "repositories",
+    srcs = ["repositories.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//workflows/private:maybe",
+        "//workflows/private:versions",
+    ],
+)

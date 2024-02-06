@@ -1,0 +1,18 @@
+# Override http_archive for local testing
+local_repository(
+    name = "aspect_rules_workflows",
+    path = "../..",
+)
+
+#---SNIP--- Below here is re-used in the workspace snippet published on releases
+
+#########################
+# rules_workflows setup #
+#########################
+load("@aspect_rules_workflows//workflows:dependencies.bzl", "rules_workflows_dependencies")
+
+rules_workflows_dependencies()
+
+load("@aspect_rules_workflows//workflows:repositories.bzl", "LATEST_WORKFLOWS_VERSION", "fetch_workflows_tools")
+
+fetch_workflows_tools(workflows_version = LATEST_WORKFLOWS_VERSION)
