@@ -2,7 +2,7 @@
 
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_file")
 
-def circleci_aspect_workflows_config(
+def workflows_circleci_config(
         name,
         circleci_org,
         aspect_workflows_config_file = "//.aspect/workflows:config.yaml",
@@ -52,7 +52,7 @@ def circleci_aspect_workflows_config(
                 actual = update_target,
             )
 
-def circleci_merged_config(
+def workflows_circleci_merged_config(
         name,
         circleci_config_files):
     """Merges multiple CircleCI config files into one.

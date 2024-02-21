@@ -6,7 +6,7 @@ load("//workflows/private:versions.bzl", "CIRCLECI_CONFIG_MERGE_VERSIONS", "ROSE
 LATEST_WORKFLOWS_VERSION = ROSETTA_VERSIONS.keys()[0]
 
 # buildifier: disable=function-docstring
-def fetch_workflows_tools(workflows_version):
+def workflows_tools(workflows_version):
     if workflows_version not in ROSETTA_VERSIONS.keys():
         fail("Aspect Workflows version {} not supported".format(workflows_version))
 

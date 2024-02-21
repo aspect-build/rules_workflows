@@ -1,8 +1,8 @@
 # When --enable_bzlmod is set, this file replaces WORKSPACE.bazel.
 
-load("@aspect_rules_workflows//workflows:repositories.bzl", "LATEST_WORKFLOWS_VERSION", "fetch_workflows_tools")
+load("@aspect_rules_workflows//workflows:repositories.bzl", "LATEST_WORKFLOWS_VERSION", "workflows_tools")
 
-fetch_workflows_tools(workflows_version = LATEST_WORKFLOWS_VERSION)
+workflows_tools(workflows_version = LATEST_WORKFLOWS_VERSION)
 
 load("@aspect_rules_lint//format:repositories.bzl", "fetch_shfmt")
 

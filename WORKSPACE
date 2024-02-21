@@ -9,9 +9,9 @@ load("@aspect_rules_workflows//workflows:dependencies.bzl", "rules_workflows_dep
 
 rules_workflows_dependencies()
 
-load("@aspect_rules_workflows//workflows:repositories.bzl", "LATEST_WORKFLOWS_VERSION", "fetch_workflows_tools")
+load("@aspect_rules_workflows//workflows:repositories.bzl", "LATEST_WORKFLOWS_VERSION", "workflows_tools")
 
-fetch_workflows_tools(workflows_version = LATEST_WORKFLOWS_VERSION)
+workflows_tools(workflows_version = LATEST_WORKFLOWS_VERSION)
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
 
