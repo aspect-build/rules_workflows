@@ -2,6 +2,12 @@
 
 # Versions should be in descending order so ROSETTA_VERSIONS.keys()[0] is always the latest version.
 ROSETTA_VERSIONS = {
+    "5.10.13": {
+        "darwin_aarch64": "sha256-TkFUVQ6CsDlTbz219DfWHr7DcY+ZkIS0CRWBWykCfOU=",
+        "darwin_x86_64": "sha256-mRHbTUfeKNIeWa0byk6KfnQvDHJnF2TotdzY6Ca5r8k=",
+        "linux_aarch64": "sha256-Hfozo/oyragk03w9AZxOrlPwpybgXKJGGm894L4OjNw=",
+        "linux_x86_64": "sha256-qoEV0Ooj2LaIzRe55Ge+Y+VyXluDpTcN/gqPCdS3/10=",
+    },
     "5.9.5": {
         "darwin_aarch64": "sha256-sqPA8Cqm5NYwVs/CkLu6tFAVKQLPioMzNPSz6xzAVzY=",
         "darwin_x86_64": "sha256-thY508zukq/tUOHAk4KFq8l8YB2hbg3o9mxeeysCNBI=",

@@ -27,6 +27,16 @@ workflows:
       - aw-gazelle:
           workspace: .
           context: []
+      - aw-auto-deliver:
+          context: []
+          requires:
+            - aw-test
+          workspace: .
+          filters:
+            branches:
+              only:
+                - /^main$/
+                - /^master$/
       - aw-test:
           workspace: .
           context: []
@@ -41,6 +51,7 @@ workflows:
     jobs:
       - aw-manual-deliver:
           context: []
+          workspace: << pipeline.parameters.workspace >>
     when:
       equal:
         - true
@@ -51,31 +62,26 @@ jobs:
     resource_class: aspect-build/aspect-warming
     working_directory: /mnt/ephemeral/workdir
     environment:
-      XDG_CACHE_HOME: /mnt/ephemeral/caches
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
     steps:
       - run:
-          name: Configure Workflows
-          environment: &a1
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+          name: Workflows environment
           command: /etc/aspect/workflows/bin/configure_workflows_env
       - checkout
       - run:
-          name: Agent health checks
-          environment: *a1
+          name: Agent health check
           command: /etc/aspect/workflows/bin/agent_health_check
           no_output_timeout: 180m
       - run:
           name: Create warming archive for root
-          environment:
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
           command: rosetta run warming --workspace .
           no_output_timeout: 180m
       - run:
           name: Archive warming tars
-          environment: *a1
           command: /etc/aspect/workflows/bin/warming_archive
   aw-buildifier:
     machine: true
@@ -83,210 +89,163 @@ jobs:
     working_directory: /mnt/ephemeral/workdir
     steps:
       - run:
-          name: Configure Workflows
-          environment: &a2
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+          name: Workflows environment
           command: /etc/aspect/workflows/bin/configure_workflows_env
       - checkout
       - run:
           name: Prepare archive directories
-          environment: *a2
           command: rm -rf /workflows/artifacts /workflows/testlogs
       - run:
-          name: Agent health checks
-          environment: *a2
+          name: Agent health check
           command: /etc/aspect/workflows/bin/agent_health_check
           no_output_timeout: 180m
       - run:
-          name: Branch Freshness
-          environment: *a2
-          command: rosetta run branch_freshness
-          no_output_timeout: 180m
-      - run:
           name: Buildifier
-          environment: *a2
           command: rosetta run buildifier --workspace << parameters.workspace >>
           no_output_timeout: 180m
       - store_artifacts:
           path: /workflows/artifacts
       - run:
           name: Finalization
-          environment: *a2
           command: rosetta run finalization
           no_output_timeout: 10m
           when: always
-    parameters: &a4
+    parameters: &a1
       workspace:
         type: string
       delivery_manifest:
         type: boolean
         default: true
     environment:
-      XDG_CACHE_HOME: /mnt/ephemeral/caches
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
       ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
   aw-configure:
     machine: true
     resource_class: aspect-build/aspect-default
     working_directory: /mnt/ephemeral/workdir
     steps:
       - run:
-          name: Configure Workflows
-          environment: &a3
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+          name: Workflows environment
           command: /etc/aspect/workflows/bin/configure_workflows_env
       - checkout
       - run:
           name: Prepare archive directories
-          environment: *a3
           command: rm -rf /workflows/artifacts /workflows/testlogs
       - run:
-          name: Agent health checks
-          environment: *a3
+          name: Agent health check
           command: /etc/aspect/workflows/bin/agent_health_check
           no_output_timeout: 180m
       - run:
-          name: Branch Freshness
-          environment: *a3
-          command: rosetta run branch_freshness
-          no_output_timeout: 180m
-      - run:
           name: Configure
-          environment: *a3
           command: rosetta run configure --workspace << parameters.workspace >>
           no_output_timeout: 180m
       - store_artifacts:
           path: /workflows/artifacts
       - run:
           name: Finalization
-          environment: *a3
           command: rosetta run finalization
           no_output_timeout: 10m
           when: always
-    parameters: *a4
+    parameters: *a1
     environment:
-      XDG_CACHE_HOME: /mnt/ephemeral/caches
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
       ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
   aw-format:
     machine: true
     resource_class: aspect-build/aspect-default
     working_directory: /mnt/ephemeral/workdir
     steps:
       - run:
-          name: Configure Workflows
-          environment: &a5
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+          name: Workflows environment
           command: /etc/aspect/workflows/bin/configure_workflows_env
       - checkout
       - run:
           name: Prepare archive directories
-          environment: *a5
           command: rm -rf /workflows/artifacts /workflows/testlogs
       - run:
-          name: Agent health checks
-          environment: *a5
+          name: Agent health check
           command: /etc/aspect/workflows/bin/agent_health_check
           no_output_timeout: 180m
       - run:
-          name: Branch Freshness
-          environment: *a5
-          command: rosetta run branch_freshness
-          no_output_timeout: 180m
-      - run:
           name: Format
-          environment: *a5
           command: rosetta run format --workspace << parameters.workspace >>
           no_output_timeout: 180m
       - store_artifacts:
           path: /workflows/artifacts
       - run:
           name: Finalization
-          environment: *a5
           command: rosetta run finalization
           no_output_timeout: 10m
           when: always
-    parameters: *a4
+    parameters: *a1
     environment:
-      XDG_CACHE_HOME: /mnt/ephemeral/caches
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
       ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
   aw-gazelle:
     machine: true
     resource_class: aspect-build/aspect-default
     working_directory: /mnt/ephemeral/workdir
     steps:
       - run:
-          name: Configure Workflows
-          environment: &a6
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+          name: Workflows environment
           command: /etc/aspect/workflows/bin/configure_workflows_env
       - checkout
       - run:
           name: Prepare archive directories
-          environment: *a6
           command: rm -rf /workflows/artifacts /workflows/testlogs
       - run:
-          name: Agent health checks
-          environment: *a6
+          name: Agent health check
           command: /etc/aspect/workflows/bin/agent_health_check
           no_output_timeout: 180m
       - run:
-          name: Branch Freshness
-          environment: *a6
-          command: rosetta run branch_freshness
-          no_output_timeout: 180m
-      - run:
           name: Gazelle
-          environment: *a6
           command: rosetta run gazelle --workspace << parameters.workspace >>
           no_output_timeout: 180m
       - store_artifacts:
           path: /workflows/artifacts
       - run:
           name: Finalization
-          environment: *a6
           command: rosetta run finalization
           no_output_timeout: 10m
           when: always
-    parameters: *a4
+    parameters: *a1
     environment:
-      XDG_CACHE_HOME: /mnt/ephemeral/caches
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
       ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
   aw-test:
     machine: true
     resource_class: aspect-build/aspect-default
     working_directory: /mnt/ephemeral/workdir
     steps:
       - run:
-          name: Configure Workflows
-          environment: &a7
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+          name: Workflows environment
           command: /etc/aspect/workflows/bin/configure_workflows_env
       - checkout
       - run:
           name: Prepare archive directories
-          environment: *a7
           command: rm -rf /workflows/artifacts /workflows/testlogs
       - run:
-          name: Agent health checks
-          environment: *a7
+          name: Agent health check
           command: /etc/aspect/workflows/bin/agent_health_check
           no_output_timeout: 180m
       - run:
-          name: Branch Freshness
-          environment: *a7
-          command: rosetta run branch_freshness
-          no_output_timeout: 180m
-      - run:
           name: Test
-          environment: *a7
           command: rosetta run test --workspace << parameters.workspace >>
           no_output_timeout: 180m
       - store_test_results:
@@ -302,13 +261,9 @@ jobs:
                   - matches:
                       pattern: ^master$
                       value: << pipeline.git.branch >>
-                  - matches:
-                      pattern: ^aspect-build\/test-delivery$
-                      value: << pipeline.git.branch >>
           steps:
             - run:
-                name: Delivery Manifest
-                environment: *a7
+                name: Delivery manifest
                 command: rosetta run delivery_manifest --workspace << parameters.workspace >>
                   --data TARGETS_SOURCE=test
                 no_output_timeout: 180m
@@ -318,54 +273,71 @@ jobs:
           path: /workflows/artifacts
       - run:
           name: Finalization
-          environment: *a7
           command: rosetta run finalization
           no_output_timeout: 10m
           when: always
-    parameters: *a4
+    parameters: *a1
     environment:
-      XDG_CACHE_HOME: /mnt/ephemeral/caches
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
       ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
-  aw-manual-deliver:
-    steps:
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
+  aw-auto-deliver:
+    steps: &a2
       - run:
-          name: Configure Workflows
-          environment: &a8
-            XDG_CACHE_HOME: /mnt/ephemeral/caches
-            ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
-            DELIVERY_COMMIT: << pipeline.parameters.delivery_commit >>
+          name: Workflows environment
           command: /etc/aspect/workflows/bin/configure_workflows_env
       - checkout
       - run:
-          name: Agent health checks
-          environment: *a8
+          name: Agent health check
           command: /etc/aspect/workflows/bin/agent_health_check
           no_output_timeout: 180m
       - run:
           name: Git fetch
-          environment: *a8
           command: git fetch
       - when:
           condition: << pipeline.parameters.delivery_commit >>
           steps:
             - run:
                 name: Checkout release commit
-                environment: *a8
                 command: git checkout << pipeline.parameters.delivery_commit >>
       - run:
           name: Delivery
-          environment: *a8
           command: rosetta run delivery
           no_output_timeout: 180m
     environment:
-      XDG_CACHE_HOME: /mnt/ephemeral/caches
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+      ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
       DELIVERY_COMMIT: << pipeline.parameters.delivery_commit >>
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
+    machine: true
+    resource_class: aspect-build/aspect-default
+    working_directory: /mnt/ephemeral/workdir
+    parameters:
+      workspace:
+        type: string
+  aw-manual-deliver:
+    steps: *a2
+    environment:
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_NUMBER: << pipeline.number >>
+      ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
+      ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
+      ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+      ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
+      DELIVERY_COMMIT: << pipeline.parameters.delivery_commit >>
+      XDG_CACHE_HOME: /mnt/ephemeral/caches
       DELIVERY_TARGETS: << pipeline.parameters.delivery_targets >>
     machine: true
     resource_class: aspect-build/aspect-default
     working_directory: /mnt/ephemeral/workdir
+    parameters:
+      workspace:
+        type: string
 orbs: {}
 parameters:
   perform_delivery:
@@ -377,6 +349,10 @@ parameters:
     description: The commit to checkout and run the delivery from. Targets listed in
       the delivery manifest for this commit will be delivered unless specific
       targets are listed in `delivery_targets`.
+  workspace:
+    type: string
+    default: .
+    description: The workspace that the `delivery_targets` live within.
   delivery_targets:
     type: string
     default: ""

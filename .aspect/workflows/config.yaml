@@ -4,6 +4,7 @@ tasks:
   - buildifier:
   - configure:
   - delivery:
+      auto_deliver: true
   - format:
   - gazelle:
   - test:
