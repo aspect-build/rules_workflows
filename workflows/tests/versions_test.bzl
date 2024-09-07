@@ -3,11 +3,13 @@ See https://bazel.build/rules/testing#testing-starlark-utilities
 """
 
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
+load("//workflows:repositories.bzl", "LATEST_WORKFLOWS_VERSION")
 load("//workflows/private:versions.bzl", "ROSETTA_VERSIONS")
 
 def _smoke_test_impl(ctx):
     env = unittest.begin(ctx)
-    asserts.equals(env, "5.10.13", ROSETTA_VERSIONS.keys()[0])
+    asserts.equals(env, "5.11.0", ROSETTA_VERSIONS.keys()[0])
+    asserts.equals(env, "5.11.0", LATEST_WORKFLOWS_VERSION)
     return unittest.end(env)
 
 # The unittest library requires that we export the test cases as named test rules,

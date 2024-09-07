@@ -312,8 +312,8 @@ jobs:
       ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
       ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+      ASPECT_WORKFLOWS_DELIVERY_COMMIT: << pipeline.parameters.delivery_commit >>
       ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
-      DELIVERY_COMMIT: << pipeline.parameters.delivery_commit >>
       XDG_CACHE_HOME: /mnt/ephemeral/caches
     machine: true
     resource_class: aspect-build/aspect-default
@@ -328,10 +328,10 @@ jobs:
       ASPECT_WORKFLOWS_CIRCLE_PIPELINE_PROJECT_TYPE: << pipeline.project.type >>
       ASPECT_WORKFLOWS_CIRCLE_WORKFLOW_BASE_NAME: aspect-workflows
       ASPECT_WORKFLOWS_CONFIG: .aspect/workflows/config.yaml
+      ASPECT_WORKFLOWS_DELIVERY_COMMIT: << pipeline.parameters.delivery_commit >>
+      ASPECT_WORKFLOWS_DELIVERY_TARGETS: << pipeline.parameters.delivery_targets >>
       ASPECT_WORKFLOWS_WORKSPACE: << parameters.workspace >>
-      DELIVERY_COMMIT: << pipeline.parameters.delivery_commit >>
       XDG_CACHE_HOME: /mnt/ephemeral/caches
-      DELIVERY_TARGETS: << pipeline.parameters.delivery_targets >>
     machine: true
     resource_class: aspect-build/aspect-default
     working_directory: /mnt/ephemeral/workdir
