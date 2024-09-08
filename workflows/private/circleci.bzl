@@ -35,7 +35,7 @@ def workflows_circleci_config(
         name = name if not make_alias else "generate_{}".format(name),
         srcs = [aspect_workflows_config_file],
         outs = [generated_target],
-        cmd = "echo -e '# GENERATED FILE - DO NOT EDIT!{0}' > $@ && CI=1 CIRCLE_PROJECT_USERNAME={1} $(execpath @aspect_rules_workflows//workflows:rosetta) steps --configuration $(execpath {2}) --host circleci >> $@".format(update_string, circleci_org, aspect_workflows_config_file),
+        cmd = "echo -e '# GENERATED FILE - DO NOT EDIT!{0}' > $@ && CI=1 CIRCLE_PROJECT_USERNAME={1} ASPECT_WORKFLOWS_DISABLE_TRACES_COLLECTION=1 $(execpath @aspect_rules_workflows//workflows:rosetta) steps --configuration $(execpath {2}) --host circleci >> $@".format(update_string, circleci_org, aspect_workflows_config_file),
         tools = ["@aspect_rules_workflows//workflows:rosetta"],
     )
 
