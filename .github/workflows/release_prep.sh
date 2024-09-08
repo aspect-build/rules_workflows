@@ -21,7 +21,7 @@ cat <<EOF
 Add to your \`MODULE.bazel\` file:
 
 \`\`\`starlark
-bazel_dep(name = "aspect_rules_jasmine", version = "${TAG:1}")
+bazel_dep(name = "aspect_rules_workflows", version = "${TAG:1}")
 \`\`\`
 
 Add to your \`WORKSPACE.bzlmod\` file:
