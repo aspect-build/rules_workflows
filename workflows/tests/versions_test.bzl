@@ -8,8 +8,8 @@ load("//workflows/private:versions.bzl", "ROSETTA_VERSIONS")
 
 def _smoke_test_impl(ctx):
     env = unittest.begin(ctx)
-    asserts.equals(env, "5.11.0", ROSETTA_VERSIONS.keys()[0])
-    asserts.equals(env, "5.11.0", LATEST_WORKFLOWS_VERSION)
+    asserts.equals(env, "5.11.11", ROSETTA_VERSIONS.keys()[0])
+    asserts.equals(env, "5.11.11", LATEST_WORKFLOWS_VERSION)
     return unittest.end(env)
 
 # The unittest library requires that we export the test cases as named test rules,
